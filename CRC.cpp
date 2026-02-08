@@ -87,13 +87,14 @@ void loop() {
         setServo2();
         break;
 
-      case 'Y':  // SETENGAH ANGKAT
-        servoVal2 = 70;
-        setServo2();
+      case '4':  // tutup / kembali
+        // servoVal2 = 120;
+        // setServo2();
+        F4();
         break;
 
-      case '4':  // tutup / kembali
-        servoVal2 = 140;
+      case 'Y':  // SETENGAH ANGKAT
+        servoVal2 = 50;
         setServo2();
         break;
     }
@@ -102,21 +103,35 @@ void loop() {
 
 
 // --- Fungsi-fungsi Pembantu ---
+void F4() {
+  servoVal1 = 135;
+  setServo1();
+  delay(500);
+  servoVal2 = 180; //robot moveraa
+  // servoVal2 = 50; //robot terminator
+  setServo2();
+}
 
 void setServo1() {
   servoGrip.write(servoVal1);
 }
 
 void setServo2() {
+  // servoVal2 = 50;
+  // setServo2();
   servoLift.write(servoVal2);
 }
 
 void throwBox() {
-  servoVal1 = 90;
-  servoVal2 = 140;
+  servoVal2 = 120;
   setServo2();
-  delay(80);
+  delay(500);
+  servoVal1 = 90;
   setServo1();
+  delay(500);
+  mundur();
+  delay(100);
+  berhenti();
   // break;
 }
 
