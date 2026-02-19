@@ -33,8 +33,8 @@ void setup() {
   motorKanan.run(RELEASE);
 
   // Setup Servo
-  servoGrip.attach(10);  // Biasanya label 'SER1' di shield
-  servoLift.attach(9);   // Biasanya label 'SER2' di shield
+  servoGrip.attach(10);
+  servoLift.attach(9);
 
   // Inisialisasi posisi awal
   servoLift.write(posLift);
