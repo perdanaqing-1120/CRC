@@ -11,8 +11,8 @@ Servo servoGrip;  // Pencapit
 SoftwareSerial btSerial(A0, A1);  // RX, TX
 
 // Posisi Servo
-int posLift = 140;        // Posisi awal pengangkat (tengah)
-int posGrip = 90;         // Posisi awal pencapit (terbuka/tengah)
+int posLift = 140;        // Posisi awal pengangkat
+int posGrip = 90;         // Posisi awal capit
 const int stepServo = 1;  // Kecepatan gerak
 
 // const int SERVO1_TOLERANCE = 46;  // dead zone
