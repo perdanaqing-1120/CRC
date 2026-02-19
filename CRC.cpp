@@ -1,44 +1,30 @@
-/*
- * Proyek: Arduino Transporter Robot (Bluetooth Control)
- * Driver: L293D Motor Shield
- * Fitur: 2 Motor DC, 2 Servo (Lift & Grip), Bluetooth HC-05
- * Author: Akhsan Rian Anugrah, S.Pd., Gr.
- */
-
 #include <AFMotor.h>
 #include <Servo.h>
 #include <SoftwareSerial.h>
 
-// --- Definisi Motor DC ---
-// Asumsi motor kiri di port 1, motor kanan di port 2
 AF_DCMotor motorKiri(1);
 AF_DCMotor motorKanan(2);
 
-// --- Definisi Servo ---
-Servo servoLift;  // Servo Pengangkat
-Servo servoGrip;  // Servo Pencapit
+Servo servoLift;  // Pengangkat
+Servo servoGrip;  // Pencapit
 
-// --- Definisi Bluetooth (SoftwareSerial) ---
-// Kita pakai A0 sebagai RX dan A1 sebagai TX karena pin digital D0-D12
-// (kecuali D2 & D13) dipakai oleh Motor Shield.
 SoftwareSerial btSerial(A0, A1);  // RX, TX
 
-// --- Variabel Posisi Servo ---
+// Posisi Servo
 int posLift = 140;        // Posisi awal pengangkat (tengah)
 int posGrip = 90;         // Posisi awal pencapit (terbuka/tengah)
-const int stepServo = 1;  // Kecepatan gerak servo (semakin besar semakin cepat)
+const int stepServo = 1;  // Kecepatan gerak
 
-// const int SERVO1_TOLERANCE = 46;  // dead zone ±3 derajat (servoGrip)
+// const int SERVO1_TOLERANCE = 46;  // dead zone
 
-// --- Variabel Data ---
 char command;
 int speedVal = 155;  // Kecepatan maksimal (0-255)
 int servoVal1 = 90;
 int servoVal2 = 155;
 
 void setup() {
-  Serial.begin(9600);    // Untuk debugging di Serial Monitor
-  btSerial.begin(9600);  // Default baud rate HC-05
+  Serial.begin(9600);
+  btSerial.begin(9600);
 
   // Setup Motor
   motorKiri.setSpeed(speedVal);
@@ -46,7 +32,7 @@ void setup() {
   motorKiri.run(RELEASE);
   motorKanan.run(RELEASE);
 
-  // Setup Servo (Pin 9 dan 10 adalah standar pin Servo di Shield L293D)
+  // Setup Servo
   servoGrip.attach(10);  // Biasanya label 'SER1' di shield
   servoLift.attach(9);   // Biasanya label 'SER2' di shield
 
@@ -64,51 +50,47 @@ void loop() {
     command = btSerial.read();
 
     switch (command) {
-      // ===== MOTOR =====
       case 'F': maju(); break;
       case 'B': mundur(); break;
       case 'L': belokKiri(); break;
       case 'R': belokKanan(); break;
       case 'S': berhenti(); break;
       case 'Z': throwBox(); break;
-      // ===== SERVO GRIP =====
-      case '1':  // buka
+
+      case '1':
         servoVal1 = 90;
         setServo1();
         break;
 
-      case '2':  // tutup / kembali
+      case '2':
         servoVal1 = 135;
         setServo1();
         break;
 
-      case '3':  // tidakangkat
+      case '3':
         servoVal2 = 180;
         setServo2();
         break;
 
-      case '4':  // tutup / kembali
+      case '4':
         // servoVal2 = 120;
         // setServo2();
         F4();
         break;
 
-      case 'Y':  // SETENGAH ANGKAT
+      case 'Y':
         servoVal2 = 50;
         setServo2();
         break;
     }
-  }
 }
 
-
-// --- Fungsi-fungsi Pembantu ---
 void F4() {
   servoVal1 = 135;
   setServo1();
   delay(500);
-  servoVal2 = 180; //robot moveraa
-  // servoVal2 = 50; //robot terminator
+  servoVal2 = 180; // moveraa
+  // servoVal2 = 50; // terminator
   setServo2();
 }
 
@@ -146,13 +128,13 @@ void mundur() {
 }
 
 void belokKiri() {
-  motorKiri.run(BACKWARD);  // Tank turn (putar di tempat)
+  motorKiri.run(BACKWARD);
   motorKanan.run(FORWARD);
 }
 
 void belokKanan() {
   motorKiri.run(FORWARD);
-  motorKanan.run(BACKWARD);  // Tank turn
+  motorKanan.run(BACKWARD);
 }
 
 void berhenti() {
